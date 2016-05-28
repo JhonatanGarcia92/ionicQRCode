@@ -1,20 +1,9 @@
-// Ionic Starter App
+var qrCodeApp = angular.module('starter', ['ionic', 'ngCordova', 'ngStorage'])
 
-// angular.module is a global place for creating, registering and retrieving Angular modules
-// 'starter' is the name of this angular module example (also set in a <body> attribute in index.html)
-// the 2nd parameter is an array of 'requires'
-var exampleApp = angular.module('starter', ['ionic', 'ngCordova'])
-
-exampleApp.run(function($ionicPlatform) {
+qrCodeApp.run(function($ionicPlatform) {
   $ionicPlatform.ready(function() {
     if(window.cordova && window.cordova.plugins.Keyboard) {
-      // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
-      // for form inputs)
       cordova.plugins.Keyboard.hideKeyboardAccessoryBar(true);
-
-      // Don't remove this line unless you know what you are doing. It stops the viewport
-      // from snapping when text inputs are focused. Ionic handles this internally for
-      // a much nicer keyboard experience.
       cordova.plugins.Keyboard.disableScroll(true);
     }
     if(window.StatusBar) {
@@ -23,18 +12,52 @@ exampleApp.run(function($ionicPlatform) {
   });
 });
 
-exampleApp.controller("ExampleController", function($scope, $cordovaBarcodeScanner) {
- 
+
+qrCodeApp.controller("QRCodeController", function($scope, $cordovaBarcodeScanner, StorageService) {
+    console.log('1111');
+    $scope.contacts = StorageService.getAll();
+    
+    $scope.add = function (contact) {
+      StorageService.add(contact);
+    };
+    
+    $scope.remove = function (contact) {
+      StorageService.remove(contact);
+    };
+
     $scope.scanBarcode = function() {
         $cordovaBarcodeScanner.scan().then(function(imageData) {
-            alert(imageData.text);
-            console.log("Barcode Format -> " + imageData.format);
-            console.log("Cancelled -> " + imageData.cancelled);
+          alert(imageData.text);
+          console.log("Barcode Format -> " + imageData.format);
+          console.log("Cancelled -> " + imageData.cancelled);
         }, function(error) {
             console.log("An error happened -> " + error);
         });
     };
  
+});
+
+// create a new factory
+qrCodeApp.factory('StorageService', function ($localStorage) {
+
+  $localStorage = $localStorage.$default({
+    contacts: []
+  });
+
+  var _getAll = function () {
+    return $localStorage.contacts;
+  };
+  var _add = function (contact) {
+    $localStorage.contacts.push(contact);
+  }
+  var _remove = function (contact) {
+    $localStorage.contacts.splice($localStorage.contacts.indexOf(contact), 1);
+  }
+  return {
+      getAll: _getAll,
+      add: _add,
+      remove: _remove
+    };
 });
 
 

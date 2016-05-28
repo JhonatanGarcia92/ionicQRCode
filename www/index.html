@@ -4,25 +4,46 @@
 <head>
         <meta charset="utf-8">
         <meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no, width=device-width">
-        <title></title>
         <link href="lib/ionic/css/ionic.css" rel="stylesheet">
         <link href="css/style.css" rel="stylesheet">
         <script src="lib/ionic/js/ionic.bundle.js"></script>
         <script src="lib/ngCordova/dist/ng-cordova.min.js"></script>
-        <script src="cordova.js"></script>
+        <script src="lib/ngstorage/ngStorage.min.js"></script>
         <script src="js/app.js"></script>
     </head>
 
+<body ng-app="starter" >
+  <ion-pane>
+    
+    <ion-header-bar class="bar-calm">
+      <h1 class="title-header"">QRCode Application</h1>
+    </ion-header-bar>
+    
+    <ion-content ng-controller="QRCodeController">
+      
+      <div class="list">
+        <label class="item item-input">
+          <input type="text" placeholder="Name" ng-model="entity.name">
+        </label>
+        <label class="item item-input">
+          <input type="text" placeholder="Phone" ng-model="entity.phone">
+        </label>
+        <label class="item item-input">
+          <input type="text" placeholder="E-mail" ng-model="entity.email"></input>
+        </label>
+        <button class="button button-full button-positive" ng-click="add(entity)">Add Contact</button>
+        <button class="button button-full button-dark" ng-click="scanBarcode()">Reader Contact</button>
+      </div>  
 
-  <body ng-app="starter">
+      <ion-list show-delete="false" can-swipe="true">
+        <ion-item ng-repeat="contact in contacts">
+          {{contact}}
+          <ion-option-button class="button-assertive ion-trash-b" ng-click="remove(entity)"></ion-option-button>
+        </ion-item>
+      </ion-list>
+    </ion-content>
+  </ion-pane>
+</body>
 
-    <ion-pane>
-      <ion-header-bar class="bar-stable">
-        <h1 class="title">Ionic Blank Starter</h1>
-      </ion-header-bar>
-      <ion-content ng-controller="ExampleController">
-        <button class="button" ng-click="scanBarcode()">Scan BarCode</button>
-      </ion-content>
-    </ion-pane>
-  </body>
+
 </html>
